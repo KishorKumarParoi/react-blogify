@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import Root, { action as rootAction, loader as rootLoader } from "./routes/root";
+import Root, { action as rootAction, loader as rootLoader } from "./routes/Root";
 
 import {
   createBrowserRouter,
@@ -9,7 +9,7 @@ import {
 import "./index.css";
 import Contact, { action as contactAction, loader as contactLoader } from "./routes/Contact";
 import { action as destroyAction } from "./routes/Destroy";
-import EditContact, { action as editAction } from "./routes/Edit";
+import EditContact, { action as editAction } from "./routes/EditContact";
 import ErrorPage from "./routes/ErrorPage";
 import Index from "./routes/Index";
 

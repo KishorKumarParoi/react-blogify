@@ -20,8 +20,9 @@ export async function action({ request, params }) {
 }
 
 export default function Contact() {
-    const contact = useLoaderData();
-
+    const { contact } = useLoaderData();
+    console.log(contact);
+    console.log(typeof contact.first);
     return (
         <div id="contact">
             <div>
@@ -33,7 +34,7 @@ export default function Contact() {
 
             <div>
                 <h1>
-                    {contact.first || contact.last ? (
+                    {(contact.first || contact.last) ? (
                         <>
                             {contact.first} {contact.last}
                         </>
