@@ -75,7 +75,12 @@ app.get('/api/products', (req, res) => {
             numReviews: 10,
         },
     ]
-    res.send(products);
+
+    if (req?.query?.search) {
+        const filteredProducts = products.filter(product =>
+            product.name.toLowerCase().includes(req.query.search.toLowerCase()));
+        return res.send({ "size": filteredProducts.length, filteredProducts });
+    };
 });
 
 app.get('/hello', (req, res) => {
