@@ -7,11 +7,19 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      const response = await axios.get('https://dummyjson.com/products');
-      setProducts(response.data.products);
-      console.log(response);
-    })()
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('api/products');
+        setProducts(response.data.products);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
   }, []);
 
   if (loading) {
