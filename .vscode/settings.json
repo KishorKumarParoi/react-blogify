@@ -1,4 +1,7 @@
 {
   "css.validate": false,
-  "tailwindCSS.emmetCompletions": true
+  "tailwindCSS.emmetCompletions": true,
+  "yaml.schemas": {
+    "openapi:v3": "file:///Users/kishorkumarparoi/Projects/react-blogify/backend/Api.yml"
+  }
 }
