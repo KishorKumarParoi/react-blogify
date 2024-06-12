@@ -1,12 +1,20 @@
 const app = require('express')();
 const dotenv = require('dotenv');
-const createWorker = require('./utils/useWorker');
+const users = require('./data');
+// const os = require('os');
+// console.log(os.cpus().length);
 
 dotenv.config(
     {
         path: './.env'
     }
 );
+
+const createWorker = require('./utils/useWorker');
+const thread_count = process.env.THREAD_COUNT;
+
+// console.log(users);
+
 
 app.get('/', (req, res) => {
     res.send('Hello from Express');
@@ -20,14 +28,32 @@ app.get('/hello', (req, res) => {
     res.status(200).send('Hello from the other side');
 });
 
-app.get("/blocking", (req, res) => {
+app.get('/blocking', async (req, res) => {
+    const start = Date.now();
+    const workerPromises = [];
+
+    for (let i = 0; i < thread_count; i++) {
+        workerPromises.push(createWorker());
+    }
+
+    const threadResults = await Promise.all(workerPromises);
+    const total = threadResults.reduce((acc, curr) => acc + curr, 0);
+
+    console.log(threadResults);
+    console.log(thread_count);
+
+    console.log("Time taken: ", Date.now() - start, "ms");
+    return res.status(200).send(`Total: ${total}`);
+});
+
+app.get("/single-thread-blocking", (req, res) => {
     const start = Date.now();
     const worker = createWorker();
 
     worker
         .then((result) => {
             console.log("Time taken: ", Date.now() - start, "ms");
-            res.status(200).send(result);
+            return res.status(200).send(result);
         })
         .catch((err) => {
             console.log(err);

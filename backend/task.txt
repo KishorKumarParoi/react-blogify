@@ -1,0 +1,2 @@
+// api/v1/users for -> rendering json
+// /users for -> rendering html

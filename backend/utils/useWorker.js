@@ -8,21 +8,14 @@ function createWorker() {
                 message: 'Hello from createWorker'
             }
         });
+
         worker.on('message', (result) => {
-            resolve(`Result is ${result}`);
+            resolve(result);
         });
 
         worker.on('error', (err) => {
-            reject(`100: An error occured: ${err}`);
+            reject(err);
         });
-
-        worker.on('exit', (code) => {
-            if (code !== 0) {
-                reject(`Worker stopped with exit code ${code}`);
-            }
-        });
-
-        worker.postMessage('working');
     })
 }
 
