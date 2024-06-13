@@ -2,6 +2,9 @@
   "css.validate": false,
   "tailwindCSS.emmetCompletions": true,
   "yaml.schemas": {
-    "openapi:v3": "file:///Users/kishorkumarparoi/Projects/react-blogify/backend/Api.yml"
+    "openapi:v3": [
+      "file:///Users/kishorkumarparoi/Projects/react-blogify/backend/Api.yml",
+      "file:///Users/kishorkumarparoi/Projects/react-blogify/backend/blogify.yml"
+    ]
   }
 }

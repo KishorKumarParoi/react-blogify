@@ -1,0 +1,508 @@
+openapi: 3.0.0
+info:
+  title: Blogify API
+  description: |-
+    Blogify is a simple blogging platform that allows
+     users to create, read, update, and delete blog posts.
+
+     _Author: [Kishor Kumar Paroi](htttps://github.com/kishorkumarparoi)_
+
+  contact:
+    email: Kishor.ruet.cse@gmail.com
+  termsOfService: https://blogify.com/terms
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://localhost:8000/api/v1
+    description: Production server
+
+tags:
+  - name: Products
+    description: Operations related to products
+
+paths:
+  /products:
+    get:
+      tags: ["Products"]
+      summary: Get all products
+      description: Get all products from the database
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: Page number
+        - in: query
+          name: limit
+          required: true
+          schema:
+            type: integer
+            example: 10
+          description: Number of items per page
+        - in: query
+          name: sort
+          required: false
+          schema:
+            type: string
+            example: "price"
+          description: Sort by field
+        - in: query
+          name: search
+          required: true
+          schema:
+            type: string
+            example: "Laptop"
+          description: Search by name
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successResponse"
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: "#/components/schemas/successResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successResponse"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+    post:
+      tags: ["Products"]
+      security:
+        - bearerAuth: []
+      summary: Create a new product
+      description: Create a new product in the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Product"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        201:
+          description: Created New Product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/structuredResponse"
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: "#/components/schemas/structuredResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/structuredResponse"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+  /products/{productId}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Get a product by ID
+      description: Get a product from the database by ID
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "1a2b3c4d5e"
+          description: Product ID
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/singleProductResponse"
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: "#/components/schemas/singleProductResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/singleProductResponse"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Update a product by ID
+      description: Update a product in the database by ID
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "1a2b3c4d5e"
+          description: Product ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Product"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/fullUpdateProductResponse"
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: "#/components/schemas/fullUpdateProductResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/fullUpdateProductResponse"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Partially update a product by ID
+      description: Partially update a product in the database by ID
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "1a2b3c4d5e"
+          description: Product ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Product"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/partialUpdateProductResponse"
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: "#/components/schemas/partialUpdateProductResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/partialUpdateProductResponse"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Delete a product by ID
+      description: Delete a product from the database by ID
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "1a2b3c4d5e"
+          description: Product ID
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/deleteProductResponse"
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: "#/components/schemas/deleteProductResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/deleteProductResponse"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        totalItems:
+          type: number
+          example: 100
+        totalPages:
+          type: number
+          example: 20
+        currentPage:
+          type: number
+          example: 2
+        nextPage:
+          type: number
+          example: 3
+        prevPage:
+          type: number
+          example: 1
+        limit:
+          type: number
+          example: 10
+    Links:
+      type: object
+      properties:
+        self:
+          type: string
+          example: "/api/v1/products?page=2&limit=10"
+        first:
+          type: string
+          example: "/api/v1/products?page=1&limit=10"
+        last:
+          type: string
+          example: "/api/v1/products?page=20&limit=10"
+        next:
+          type: string
+          example: "/api/v1/products?page=3&limit=10"
+        prev:
+          type: string
+          example: "/api/v1/products?page=1&limit=10"
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "1a2b3c4d5e"
+        name:
+          type: string
+          example: "Laptop"
+        price:
+          type: number
+          format: double
+          example: 1000.00
+        description:
+          type: string
+          example: "A high-end laptop"
+        quantity:
+          type: integer
+          format: int32
+          example: 10
+      required:
+        - name
+        - price
+    deleteProductResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: "Successfully deleted requested product"
+    partialUpdateProductResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: "Successfully updated requested product partially"
+        product:
+          $ref: "#/components/schemas/Product"
+    fullUpdateProductResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: "Successfully updated requested product"
+        product:
+          $ref: "#/components/schemas/Product"
+    singleProductResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: "Successfully fetched requested product"
+        product:
+          $ref: "#/components/schemas/Product"
+    successResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: "Successfully fetched all products"
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+        links:
+          $ref: "#/components/schemas/Links"
+    structuredResponse:
+      type: object
+      description: Created New Product
+      properties:
+        status:
+          type: number
+          example: 201
+        message:
+          type: string
+          example: "New product created successfully"
+        data:
+          $ref: "#/components/schemas/Product"
+        links:
+          type: object
+          properties:
+            docs:
+              type: string
+              example: "/api/v1/docs"
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: number
+                example: 401
+              message:
+                type: string
+                example: "Unauthorized: Please authenticate to access this resource"
+              links:
+                type: object
+                properties:
+                  login:
+                    type: string
+                    example: "/api/v1/auth/login"
+                  register:
+                    type: string
+                    example: "/api/v1/auth/register"
+    BadRequestError:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: number
+                example: 400
+              message:
+                type: string
+                example: "Bad request: Please provide a valid input"
+              links:
+                type: object
+                properties:
+                  docs:
+                    type: string
+                    example: "/api/v1/docs"
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: number
+                example: 500
+              message:
+                type: string
+                example: "Internal server error: Please try again later"
+              links:
+                type: object
+                properties:
+                  docs:
+                    type: string
+                    example: "/api/v1/docs"
